@@ -1,23 +1,23 @@
-def validar_temperatura(temperatura):
+def validar_temperatura(temp):
     """
     Valida a temperatura inserida pelo usuário.
     
     Parêmntro:
-        temperatura (str): A temperatura inserida pelo usuário.
+        temp (str): A temperatura inserida pelo usuário.
         
     Retorno:
         float or None: A temperatura validada ou None se a entrada for inválida.
     """
     while True:
         try:
-            temperatura = float(temperatura)
+            temperatura = float(temp)
             if -60 <= temperatura <= 50:
                 return temperatura
             else:
-                print("Por favor, informe uma temperatura no intervalo de -60 graus à +50 graus.")
+                print("Por favor, informe uma temperatura no intervalo de -60ºC à +50ºC.")
                 return None
         except ValueError:
-            print("Por favor, informe uma temperatura válida!")
+            print("Por favor, informe uma temperatura válida! (Ex: 25.5)")
             return None
 
 def obter_dados_mensais(meses):
@@ -34,8 +34,8 @@ def obter_dados_mensais(meses):
     for i in range(1, 13):
         temperatura_maxima = None
         while temperatura_maxima is None:
-            print(f"\nInforme os dados para {meses[i]}: ")
-            temperatura_maxima = validar_temperatura(input(">Temperatura máxima do mês (em ºC): "))
+            print(f"\nPor favor, forneça os dados para o mês de {meses[i]}.")
+            temperatura_maxima = validar_temperatura(input(">Digite a temperatura máxima do mês (em ºC): "))
         temperaturas.append(temperatura_maxima)
     return temperaturas
 
@@ -67,8 +67,7 @@ def main():
 
 
     # Exibir os resultados
-    exibir_titulo_do_programa()
-    print("\n[Dᴀᴅᴏs Esᴛᴀᴛɪ́sᴛɪᴄᴏs] --------------------")
+    print("\n[DADOS ESTATÍSTICOS] --------------------")
     print(f"- Temperatura média máxima anual: {media_anual:.2f}ºC")
     print(f"- Quantidade de meses escaldantes: {meses_escaldantes}")
     print(f"- Mês mais escaldante do ano: {mes_mais_escaldante.title()}")
