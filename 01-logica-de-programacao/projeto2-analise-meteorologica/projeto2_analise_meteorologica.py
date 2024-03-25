@@ -27,10 +27,10 @@ def carregar_dados(nome_do_arquivo):
                 #dados.append(linha)
                 return list(documento)
     except FileNotFoundError as e:
-        print(f"Erro: Arquivo '{nome_do_arquivo}' não encontrado.")
+        print(f"> Erro: Arquivo '{nome_do_arquivo}' não encontrado.")
         raise e
     except IOError as e:
-        print(f"Erro: Não foi possível abrir o arquivo '{nome_do_arquivo}'.")
+        print(f"> Erro: Não foi possível abrir o arquivo '{nome_do_arquivo}'.")
         raise e
     #return dados
 
@@ -48,25 +48,16 @@ def validar_entradas(mes_inicial, ano_inicial, mes_final, ano_final, tipo_dados)
     Retorna:
     bool: True se os dados de entrada forem válidos, False caso contrário.
     """
-    # Verifica se o tipo de dados especificado pelo usuário está dentro das opções válidas.
-    if tipo_dados not in ["todos", "precipitacao", "temperatura", "umidade_vento"]:
+    tipos_validos = ["todos", "precipitacao", "temperatura", "umidade_vento"]
+    if tipo_dados not in tipos_validos:
         print("Erro: Tipo de dados inválido.")
         return False
     
-    # Verifica se os meses fornecidos estão dentro do intervalo válido de 1 a 12.
-    if not 1 <= mes_inicial <= 12 or not 1 <= mes_final <= 12:
-        print("Erro: Os meses devem estar entre 1 e 12.")
-        return False
-    
-    # Verifica se os anos fornecidos estão dentro do intervalo válido de 1961 a 2016.
-    if ano_inicial < 1961 or ano_final > 2016:
-        print("Erro: O ano deve estar entre 1961 e 2016.")
+    if not (1 <= mes_inicial <= 12 and 1961 <= ano_inicial <= 2016):
+        print("> Erro: Meses devem estar entre 1 e 12, anos entre 1961 e 2016.")
         return False
 
-    # Verifica se o intervalo de datas é válido.
-    # O ano inicial não pode ser posterior ao ano final.
-    # Se forem iguais, o mês inicial não pode ser posterior ao mês final.
-    if (ano_inicial > ano_final) or (ano_inicial == ano_final and mes_inicial > mes_final):
+    if ano_inicial > ano_final or (ano_inicial == ano_final and mes_inicial > mes_final):
         print("Erro: Intervalo de datas inválido.")
         return False
     
@@ -178,7 +169,7 @@ def calcular_media_minima_mes(dados, numero_mes):
     """
     # Validar o número do mês
     if numero_mes < 1 or numero_mes > 12:
-        raise ValueError("Número de mês inválido. Por favor, insira um número entre 1 e 12.")
+        raise ValueError("> Número de mês inválido. Por favor, insira um número entre 1 e 12.")
 
     medias_minimas = {}
     for ano in range(2006, 2017):
@@ -215,16 +206,39 @@ def solicitar_tipo_dados():
         print("Escolha inválida.")
         return solicitar_tipo_dados()
 
+
+def solicitar_numero(mensagem, minimo, maximo):
+    """
+    Solicita ao usuário para digitar um número dentro de um intervalo especificado.
+
+    Parâmetros:
+    mensagem (str): A mensagem para solicitar a entrada do usuário.
+    minimo (int): O valor mínimo permitido.
+    maximo (int): O valor máximo permitido.
+
+    Retorna:
+    int: O número inserido pelo usuário, garantido para estar dentro do intervalo especificado.
+    """
+    while True:
+        try:
+            numero = int(input(mensagem))
+            if minimo <= numero <= maximo:
+                return numero
+            else:
+                print(f"> Erro: Por favor, insira um número entre {minimo} e {maximo}.")
+        except ValueError:
+            print("> Erro: Por favor, insira um número válido.")
+
 def main():
     # Carregar dados
     nome_do_arquivo = "Anexo_Arquivo_Dados_Projeto_Logica_e_programacao_de_computadores.csv"
     dados_carregados = carregar_dados(nome_do_arquivo)
 
     # Solicitar entrada do usuário
-    mes_inicial = int(input("Digite o mês inicial (1 a 12): "))
-    ano_inicial = int(input("Digite o ano inicial (1961 a 2016): "))
-    mes_final = int(input("Digite o mês final (1 a 12): "))
-    ano_final = int(input("Digite o ano final (1961 a 2016): "))
+    mes_inicial = solicitar_numero("Digite o mês inicial (1 a 12): ", 1, 12)
+    ano_inicial = solicitar_numero("Digite o ano inicial (1961 a 2016): ", 1961, 2016)
+    mes_final = solicitar_numero("Digite o mês final (1 a 12): ", 1, 12)
+    ano_final = solicitar_numero("Digite o ano final (1961 a 2016): ", 1961, 2016)
     tipo_dados = solicitar_tipo_dados()
 
     # Visualizar dados
@@ -233,22 +247,22 @@ def main():
     # Encontrar o mês mais chuvoso
     ano_chuvoso, mes_chuvoso, precipitacao = mes_mais_chuvoso(dados_carregados)
     print("\nMês mais chuvoso:")
-    print(f"> O mês mais chuvoso foi {mes_chuvoso}/{ano_chuvoso} com precipitação de {precipitacao} mm.")
+    print(f"- O mês mais chuvoso foi {meses[mes_chuvoso]}/{ano_chuvoso} com precipitação de {precipitacao} mm.\n")
 
     # Calcular média da temperatura mínima para um determinado mês
-    numero_mes = int(input("\nDigite o número do mês (1-12): "))
+    numero_mes = solicitar_numero("Digite o mês inicial (1 a 12): ", 1, 12)
     if numero_mes < 1 or numero_mes > 12:
-        print("Número de mês inválido. Por favor, insira um número entre 1 e 12.")
+        print("> Número de mês inválido. Por favor, insira um número entre 1 e 12.")
         return
 
     try:
         medias_minimas_mes = calcular_media_minima_mes(dados_carregados, numero_mes)
         media_geral = sum(medias_minimas_mes.values()) / len(medias_minimas_mes)
-        print(f"Média da temperatura mínima do mês {meses[numero_mes]} nos últimos 11 anos (2006 a 2016)")
+        print(f"\nMédia da temperatura mínima do mês {meses[numero_mes]} nos últimos 11 anos (2006 a 2016)")
         for chave, valor in medias_minimas_mes.items():
-            print(f"> Média mínima de {chave}: {valor:.2f}°C")
+            print(f"- Média mínima de {chave}: {valor:.2f}°C")
         print(f"\nMédia geral da temperatura mínima do mês {meses[numero_mes]} nos últimos 11 anos (2006 a 2016):")
-        print(f"> Média geral da temperatura mínima para o mês: {media_geral:.2f}°C\n")
+        print(f"- Média geral da temperatura mínima para o mês: {media_geral:.2f}°C\n")
     except ValueError as e:
         print(e)
 
