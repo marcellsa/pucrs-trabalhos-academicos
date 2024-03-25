@@ -1,5 +1,13 @@
 import csv
 
+
+# Dicionário de meses
+meses = {
+    1: 'janeiro', 2: 'fevereiro', 3: 'março', 4: 'abril', 5: 'maio', 6: 'junho',
+    7: 'julho', 8: 'agosto', 9: 'setembro', 10: 'outubro', 11: 'novembro', 12: 'dezembro'
+}
+
+
 def carregar_dados(nome_do_arquivo):
     """
     Carrega os dados de um arquivo CSV para uma lista de dicionários.
@@ -137,6 +145,58 @@ def visualizar_dados(dados, mes_inicial, ano_inicial, mes_final, ano_final, tipo
             print(f"Data: {linha['data']}\tPrecipitação: {linha['precip']}\tMáxima: {linha['maxima']}\tMínima: {linha['minima']}\tInsolação: {linha['horas_insol']}\tMédia: {linha['temp_media']}\tUmidade: {linha['um_relativa']}\tVel. Vento: {linha['vel_vento']}")
 
 
+def mes_mais_chuvoso(dados):
+    """
+    Encontra o mês mais chuvoso nos dados.
+
+    Parâmetros:
+    dados (list): Lista de dicionários contendo os dados meteorológicos.
+
+    Retorna:
+    tuple: Uma tupla contendo o ano, mês e a maior precipitação registrada.
+    """
+    maior_precipitacao = 0
+    mes_chuvoso_encontrado = None
+    ano_mais_chuvoso = None
+    
+    for linha in dados:
+        precipitacao = float(linha['precip'])
+        if precipitacao > maior_precipitacao:
+            maior_precipitacao = precipitacao
+            mes_chuvoso_encontrado = int(linha['data'].split('/')[1])
+            ano_mais_chuvoso = int(linha['data'].split('/')[2])
+
+    return (ano_mais_chuvoso, mes_chuvoso_encontrado, maior_precipitacao)
+
+
+def calcular_media_minima_mes(dados, numero_mes):
+    """
+    Calcula a média da temperatura mínima para o mês especificado nos últimos 11 anos.
+
+    Parâmetros:
+    dados (list): Lista de dicionários contendo os dados meteorológicos.
+    numero_mes (int): O número do mês (1 a 12).
+
+    Retorna:
+    dict: Um dicionário onde as chaves são no formato "mesAno" (por exemplo, "novembro2006") e os valores são as médias da temperatura mínima para o mês e ano correspondentes.
+    """
+    # Validar o número do mês
+    if numero_mes < 1 or numero_mes > 12:
+        raise ValueError("Número de mês inválido. Por favor, insira um número entre 1 e 12.")
+
+    medias_minimas = {}
+    for ano in range(2006, 2017):
+        temperaturas_minimas_mes_ano = [float(dado['minima']) for dado in dados if dado['data'].split('/')[2] == str(ano) and dado['data'].split('/')[1] == str(numero_mes)]
+        
+        # Verificar se há dados disponíveis para o mês e ano especificados
+        if temperaturas_minimas_mes_ano:
+            media_minima = sum(temperaturas_minimas_mes_ano) / len(temperaturas_minimas_mes_ano)
+            nome_mes = meses[numero_mes]  # Obtém o nome do mês
+            medias_minimas[f"{nome_mes}{ano}"] = media_minima
+
+    return medias_minimas
+
+
 def main():
     mes_inicial = int(input("Digite o mês inicial (1 a 12): "))
     ano_inicial = int(input("Digite o ano inicial (1961 a 2016): "))
@@ -163,9 +223,25 @@ def main():
     
     nome_do_arquivo = "Anexo_Arquivo_Dados_Projeto_Logica_e_programacao_de_computadores.csv"
     dados_carregados = carregar_dados(nome_do_arquivo)
-    #exibir_dados(dados_carregados, 10)
+    # Exibir_dados(dados_carregados, 10)
     visualizar_dados(dados_carregados, mes_inicial, ano_inicial, mes_final, ano_final, tipo_dados)
 
+    # Encontrar o mês mais chuvoso
+    ano_chuvoso, mes_chuvoso, precipitacao = mes_mais_chuvoso(dados_carregados)
+    print("\nOurtas informações estatpisitcas")
+    print(f"\nO mês mais chuvoso foi {mes_chuvoso}/{ano_chuvoso} com precipitação de {precipitacao}mm.")
+
+    mes_usuario = int(input("Digite o número do mês (1-12): "))
+    if mes_usuario < 1 or mes_usuario > 12:
+        print("Número de mês inválido. Por favor, insira um número entre 1 e 12.")
+        return
+
+    try:
+        medias_minimas_mes = calcular_media_minima_mes(dados_carregados, mes_usuario)
+        for chave, valor in medias_minimas_mes.items():
+            print(f"Média mínima de {chave}: {valor:.2f}°C")
+    except ValueError as e:
+        print(e)
 
 if __name__ == "__main__":
     main()
