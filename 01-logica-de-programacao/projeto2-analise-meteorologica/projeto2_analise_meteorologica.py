@@ -19,19 +19,20 @@ def carregar_dados(nome_do_arquivo):
     FileNotFoundError: Se o arquivo CSV especificado não for encontrado.
     IOError: Se houver um erro ao abrir o arquivo CSV.
     """
-    dados = []
+    #dados = []
     try:
         with open(nome_do_arquivo, "r", newline="", encoding="utf-8") as arquivo:
             documento = csv.DictReader(arquivo)
             for linha in documento:
-                dados.append(linha)
+                #dados.append(linha)
+                return list(documento)
     except FileNotFoundError as e:
         print(f"Erro: Arquivo '{nome_do_arquivo}' não encontrado.")
         raise e
     except IOError as e:
         print(f"Erro: Não foi possível abrir o arquivo '{nome_do_arquivo}'.")
         raise e
-    return dados
+    #return dados
 
 def validar_entradas(mes_inicial, ano_inicial, mes_final, ano_final, tipo_dados):
     """
