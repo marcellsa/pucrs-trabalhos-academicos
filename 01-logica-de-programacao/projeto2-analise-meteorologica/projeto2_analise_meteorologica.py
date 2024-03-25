@@ -181,9 +181,7 @@ def calcular_media_minima_mes(dados, numero_mes):
 
     medias_minimas = {}
     for ano in range(2006, 2017):
-        print(f"Ano: {ano}")
         temperaturas_minimas_mes_ano = [float(dado['minima']) for dado in dados if dado['data'].split('/')[2] == str(ano) and dado['data'].split('/')[1] == str(numero_mes).zfill(2)]
-        print(temperaturas_minimas_mes_ano)
         
         # Verificar se há dados disponíveis para o mês e ano especificados
         if temperaturas_minimas_mes_ano:
