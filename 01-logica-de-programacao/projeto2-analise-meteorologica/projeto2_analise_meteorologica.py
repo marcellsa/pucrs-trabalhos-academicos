@@ -192,6 +192,28 @@ def calcular_media_minima_mes(dados, numero_mes):
     return medias_minimas
 
 
+def solicitar_tipo_dados():
+    """
+    Solicita ao usuário para escolher o tipo de dados que deseja visualizar.
+
+    Retorna:
+    str: O tipo de dados escolhido.
+    """
+    print("\nEscolha o tipo de dados que deseja visualizar:")
+    print("1 - Todos os dados")
+    print("2 - Apenas precipitação")
+    print("3 - Apenas temperatura")
+    print("4 - Apenas umidade e vento")
+
+    escolha = input("Escolha: ")
+    tipos = {"1": "todos", "2": "precipitacao", "3": "temperatura", "4": "umidade_vento"}
+    
+    if escolha in tipos:
+        return tipos[escolha]
+    else:
+        print("Escolha inválida.")
+        return solicitar_tipo_dados()
+
 def main():
     # Carregar dados
     nome_do_arquivo = "Anexo_Arquivo_Dados_Projeto_Logica_e_programacao_de_computadores.csv"
@@ -202,24 +224,7 @@ def main():
     ano_inicial = int(input("Digite o ano inicial (1961 a 2016): "))
     mes_final = int(input("Digite o mês final (1 a 12): "))
     ano_final = int(input("Digite o ano final (1961 a 2016): "))
-    tipo_dados = input("\nDigite o tipo de dados que deseja visualizar:\n"
-                       "1 - Todos os dados\n"
-                       "2 - Apenas precipitação\n"
-                       "3 - Apenas temperatura\n"
-                       "4 - Apenas umidade e vento\n"
-                       "Escolha: ")
-
-    if tipo_dados == "1":
-        tipo_dados = "todos"
-    elif tipo_dados == "2":
-        tipo_dados = "precipitacao"
-    elif tipo_dados == "3":
-        tipo_dados = "temperatura"
-    elif tipo_dados == "4":
-        tipo_dados = "umidade_vento"
-    else:
-        print("Escolha inválida.")
-        return
+    tipo_dados = solicitar_tipo_dados()
 
     # Visualizar dados
     visualizar_dados(dados_carregados, mes_inicial, ano_inicial, mes_final, ano_final, tipo_dados)
