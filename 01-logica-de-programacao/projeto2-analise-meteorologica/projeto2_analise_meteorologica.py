@@ -251,10 +251,7 @@ def main():
 
     # Calcular média da temperatura mínima para um determinado mês
     numero_mes = solicitar_numero("Digite o mês inicial (1 a 12): ", 1, 12)
-    if numero_mes < 1 or numero_mes > 12:
-        print("> Número de mês inválido. Por favor, insira um número entre 1 e 12.")
-        return
-
+    
     try:
         medias_minimas_mes = calcular_media_minima_mes(dados_carregados, numero_mes)
         media_geral = sum(medias_minimas_mes.values()) / len(medias_minimas_mes)
