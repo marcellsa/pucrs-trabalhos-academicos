@@ -1,3 +1,7 @@
+"""
+Módulo responsável por carregar os dados dos jogos da Steam a partir de um arquivo CSV.
+"""
+
 import csv
 from .exceptions import DataLoadError
 
@@ -21,6 +25,6 @@ def load_data(file_path: str) -> list[dict]:
             for row in csv_reader:
                 data.append(row)
     except Exception as e:
-        raise DataLoadError(f"Erro ao carregar os dados do arquivo {file_path}: {str(e)}")
+        raise DataLoadError(f"Erro ao carregar os dados do arquivo {file_path}: {str(e)}") from e
 
     return data

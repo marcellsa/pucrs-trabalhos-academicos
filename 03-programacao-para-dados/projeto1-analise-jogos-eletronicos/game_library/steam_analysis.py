@@ -1,3 +1,12 @@
+"""
+Este módulo contém funções para análise de dados de jogos.
+
+As funções fornecem cálculos e informações úteis sobre uma lista de jogos, incluindo:
+- A porcentagem de jogos gratuitos e pagos.
+- O(s) ano(s) com o maior número de lançamentos de jogos.
+- O desenvolvedor com o maior número de jogos lançados.
+"""
+
 from typing import List, Dict
 from datetime import datetime
 from .game import Game
