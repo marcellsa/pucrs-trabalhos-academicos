@@ -2,7 +2,6 @@
 Módulo de inicialização para o pacote 'game_library'.
 """
 
-# Importações de inicialização do pacote, se necessário
 from .data_loader import load_data
 from .game import Game
 from .exceptions import DataLoadError, GameNotFoundError
