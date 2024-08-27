@@ -1,92 +1,62 @@
 """
 Este módulo contém funções para análise de dados de jogos.
-
-As funções fornecem cálculos e informações úteis sobre uma lista de jogos, incluindo:
-- A porcentagem de jogos gratuitos e pagos.
-- O(s) ano(s) com o maior número de lançamentos de jogos.
-- O desenvolvedor com o maior número de jogos lançados.
 """
 
-from typing import List, Dict
-from datetime import datetime
-from .game import Game
+from collections import Counter
 
-def get_free_vs_paid_percentage(games: List[Game]) -> Dict[str, float]:
+
+def get_free_vs_paid_percentage(games):
     """
-    Calcula o percentual de jogos gratuitos e pagos na lista fornecida.
+    Retorna o percentual de jogos gratuitos e pagos na plataforma.
 
-    Parâmetros:
-    - games (List[Game]): Lista de objetos Game.
+    Args:
+        games (list): Lista de objetos Game.
 
-    Retorna:
-    - Dict[str, float]: Dicionário com as chaves 'Free' e 'Paid' e seus respectivos percentuais.
+    Returns:
+        dict: Dicionário com as chaves 'free' e 'paid' e seus respectivos percentuais.
     """
     total_games = len(games)
-    if total_games == 0:
-        return {"Free": 0.0, "Paid": 0.0}
-
-    free_games = sum(1 for game in games if game.is_free())
+    free_games = len([game for game in games if game.price == 0])
     paid_games = total_games - free_games
 
-    free_percentage = (free_games / total_games) * 100
-    paid_percentage = (paid_games / total_games) * 100
+    return {
+        'free': (free_games / total_games) * 100,
+        'paid': (paid_games / total_games) * 100
+    }
 
-    return {"Free": free_percentage, "Paid": paid_percentage}
-
-def get_year_with_most_games(games: List[Game]) -> List[int]:
+def get_year_with_most_games(games):
     """
-    Retorna o(s) ano(s) com o maior número de lançamentos de jogos.
+    Retorna o ano com o maior número de novos jogos lançados. 
+    Em caso de empate, retorna uma lista com os anos empatados.
 
-    Parâmetros:
-    - games (List[Game]): Lista de objetos Game.
+    Args:
+        games (list): Lista de objetos Game.
 
-    Retorna:
-    - List[int]: Lista dos anos com o maior número de lançamentos.
+    Returns:
+        int | list: Ano com o maior número de novos jogos ou uma lista de anos em caso de empate.
     """
-    year_count = {}
-    
-    for game in games:
-        try:
-            year = datetime.strptime(game.release_date, "%Y-%m-%d").year
-            if year in year_count:
-                year_count[year] += 1
-            else:
-                year_count[year] = 1
-        except ValueError:
-            # Ignora datas de lançamento inválidas ou não fornecidas
-            continue
-
-    if not year_count:
-        return []
-
+    release_years = [game.release_date.split('-')[0] for game in games if game.release_date]
+    year_count = Counter(release_years)
     max_games = max(year_count.values())
-    most_common_years = [year for year, count in year_count.items() if count == max_games]
+    most_active_years = [year for year, count in year_count.items() if count == max_games]
 
-    return most_common_years
+    if len(most_active_years) == 1:
+        return most_active_years[0]
+    return most_active_years
 
-def get_developer_with_most_games(games: List[Game]) -> str:
+def get_developer_with_most_games(games):
     """
     Retorna o desenvolvedor com o maior número de jogos lançados.
 
-    Parâmetros:
-    - games (List[Game]): Lista de objetos Game.
+    Args:
+        games (list): Lista de objetos Game.
 
-    Retorna:
-    - str: Nome do desenvolvedor com o maior número de jogos lançados.
+    Returns:
+        str: Nome do desenvolvedor com o maior número de jogos lançados.
     """
-    developer_count = {}
+    developers_list = [dev.strip() for game in games for dev in game.
+                       developers.split(',') if game.developers]
+    developer_count = Counter(developers_list)
+    most_common_developer = developer_count.most_common(1)[0][0]
 
-    for game in games:
-        for developer in game.developers:
-            if developer in developer_count:
-                developer_count[developer] += 1
-            else:
-                developer_count[developer] = 1
-
-    if not developer_count:
-        return ""
-
-    max_games = max(developer_count.values())
-    top_developer = [dev for dev, count in developer_count.items() if count == max_games]
-
-    return top_developer[0] if top_developer else ""
+    return most_common_developer
