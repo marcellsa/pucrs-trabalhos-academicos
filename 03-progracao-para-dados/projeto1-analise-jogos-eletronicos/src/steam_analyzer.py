@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple
 from collections import Counter
+from datetime import datetime
 
 
 class SteamAnalyzer:
@@ -41,8 +42,18 @@ class SteamAnalyzer:
         for game in self.games:
             release_date = game['Release date']
             if release_date:
-                year = int(release_date.split('-')[0])
-                year_counter[year] += 1
+                try:
+                    date = datetime.strptime(release_date, '%b %d, %Y')
+                    year_counter[date.year] += 1
+                except ValueError:
+                    # Ignora datas inválidas
+                    pass
+
+        if not year_counter:
+            # Retorna uma lista vazia se não houver lançamentos válidos
+            return []
+
+        max_releases = max(year_counter.values())
 
         max_releases = max(year_counter.values())
         return [year for year, releases in year_counter.items() if releases == max_releases]
