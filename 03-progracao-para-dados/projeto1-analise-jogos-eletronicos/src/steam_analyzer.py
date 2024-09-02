@@ -57,3 +57,20 @@ class SteamAnalyzer:
 
         max_releases = max(year_counter.values())
         return [year for year, releases in year_counter.items() if releases == max_releases]
+
+    def find_most_common_genre(self) -> Tuple[str, int]:
+        """
+        Encontra o gênero de jogo mais comum na plataforma.
+
+        :return: Uma tupla contendo o gênero mais comum e o número de jogos desse gênero.
+        """
+        genre_counter = Counter()
+
+        for game in self.games:
+            genres = game['Genres'].split(',')
+            for genre in genres:
+                genre = genre.strip()
+                if genre:
+                    genre_counter[genre] += 1
+
+        return genre_counter.most_common(1)[0]
