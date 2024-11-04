@@ -1,14 +1,14 @@
 import json
 from flask_restful import abort, Api, Resource
 from flask import Flask
-import flask.scaffold
-flask.helpers._endpoint_from_view_func = flask.scaffold._endpoint_from_view_func
+# import flask.scaffold
+# flask.helpers._endpoint_from_view_func = flask.scaffold._endpoint_from_view_func
 
 
 app = Flask(__name__)
 api = Api(app)
 
-with open('./country.json', 'r', encoding='utf-8') as f:
+with open('../data/country.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 COUNTRIES = data
 del data
