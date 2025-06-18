@@ -1,60 +1,74 @@
-# Projeto de Machine Learning I – Fase 1
+
+# Projeto de Machine Learning I – Fases 1 e 2
 
 **Disciplina:** Machine Learning I  
-**Dataset:** ATLANTIC FLOWER-INVERTEBRATE INTERACTIONS
+**Dataset:** ATLANTIC FLOWER-INVERTEBRATE INTERACTIONS  
 
 ---
 
-## 📌 Objetivo
+## Objetivo
 
-Este projeto tem como objetivo aplicar os conceitos de Análise Exploratória de Dados (EDA) e Preparação de Dados para o desenvolvimento de um modelo de classificação na Fase 2. O foco da Fase 1 é garantir que os dados estejam prontos para modelagem.
+Desenvolver uma solução de classificação binária para prever a origem dos invertebrados (native ou non-native), aplicando as etapas de análise exploratória, preparação dos dados e criação de modelos de Machine Learning.
 
 ---
 
-## 🧪 Etapas realizadas na Fase 1
+## Etapas realizadas na Fase 1
 
 1. **Análise Exploratória (EDA)**
-   - Visualização de dados (boxplots, histogramas, gráficos de contagem)
-   - Correlação entre variáveis
+   - Visualização com histogramas, boxplots, heatmap de correlação e gráficos de contagem.
+   - Identificação de dados faltantes e outliers.
 
-2. **Formatação dos atributos**
-   - Unificação de formatos e padronização de representações
-
-3. **Transformação dos dados**
-   - Conversão de atributos categóricos para o formato numérico
-
-4. **Tratamento de dados faltantes**
-   - Preenchimento com K-means e, quando necessário, mediana global
-   - Exclusão de colunas com baixa relevância e alta ausência de dados
-
-5. **Tratamento de outliers**
-   - Identificação via boxplots
-   - Tratamento de atributos críticos
-
-6. **Reescalonamento dos dados**
-   - Padronização com `StandardScaler` 
+2. **Preparação e transformação dos dados**
+   - Unificação de representações e formatos.
+   - Conversão de atributos categóricos em numéricos.
+   - Padronização de atributos numéricos com `StandardScaler`.
+   - Tratamento de dados faltantes com K-means + mediana.
+   - Exclusão de colunas irrelevantes.
 
 ---
 
-## 📁 Conteúdo da pasta
+## Etapas realizadas na Fase 2
+
+1. **Balanceamento da variável alvo**
+   - Aplicação de oversampling da classe minoritária com `resample`.
+
+2. **Treinamento dos modelos**
+   - Teste de quatro algoritmos: Decision Tree, MLP, Random Forest e Regressão Logística.
+   - Ajuste de hiperparâmetros via `GridSearchCV` com validação cruzada (cv=5).
+
+3. **Avaliação**
+   - Métricas coletadas: Acurácia, Precisão, Recall, F1-score.
+   - Análise da matriz de confusão.
+   - Comparação gráfica dos modelos.
+
+4. **Conclusão**
+   - O Random Forest foi o modelo com melhor desempenho (acima de 99% em todas as métricas).
+   - A Decision Tree também teve ótimo resultado, mas com maior risco de overfitting.
+   - MLP e Regressão Logística tiveram desempenho inferior.
+   - Apesar do alto desempenho dos modelos, destacamos a necessidade de investigar possíveis sinais de overfitting ou viés nos dados.
+
+---
+
+## Estrutura do projeto
 
 ```text
 projeto-machine-learning-1/
 │
 ├── data/
-│   ├── raw/                         # Dataset original (não modificado)
+│   ├── raw/                         
 │   └── processed/
-│       └── dataset_fase1_tratado.csv   # Dataset limpo e preparado
+│       ├── dataset_fase1_tratado.csv    
+│       └── dataset_fase2_balanceado.csv 
 │
 ├── notebooks/
-│   └── ML_Fase1.ipynb              # Notebook com todas as análises e etapas
+│   ├── ML_Fase1.ipynb              
+│   └── ML_Fase2.ipynb              
 │
-└── README.md                       # Documento atual com descrição do projeto
+└── README.md                       
+```
 
 ---
 
-## ✅ Pronto para a Fase 2
+## Status
 
-O dataset final (`dataset_fase1_tratado.csv`) está pronto para ser utilizado em algoritmos de classificação binária com foco na variável `invertebrate_origins`.
-
----
+O projeto foi concluído com sucesso, entregando um classificador binário robusto e validado.
